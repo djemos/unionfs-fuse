@@ -1,0 +1,29 @@
+#Packager: Dimitris Tzemos <djemos(at)slackel.gr>
+
+pkgname=unionfs-fuse
+pkgver=0.26
+pkgrel=1dj
+source=("http://podgorny.cz/$pkgname/releases/$pkgname-$pkgver.tar.xz")
+url="http://podgorny.cz/moin/UnionFsFuse/"
+docs=('AUTHORS' 'COPYING' 'ChangeLog' 'Credits' 'MANIFEST' 'README' 'TODO')
+
+slackdesc=\
+(
+#|-----handy-ruler------------------------------------------------------|
+"$pkgname (filesystem implementation more flexible than kernel"
+"solution"
+)
+
+build() {
+	cd $SRC/${pkgname}-${pkgver}
+
+# Build
+cmake . -DCMAKE_INSTALL_PREFIX:PATH=/usr \
+	-DBUILD_SHARED_LIBS:BOOL=ON \
+	-DLIBRARY_OUTPUT_PATH:PATH=/usr/lib${LIBDIRSUFFIX} \
+	-DSYSCONFDIR:PATH=/etc \
+	$CONFIG_OPTIONS || exit 1
+
+make VERBOSE=1 || return 1
+make install DESTDIR=$PKG || return 1
+}
